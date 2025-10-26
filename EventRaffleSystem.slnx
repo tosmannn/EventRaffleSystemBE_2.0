@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="EventRaffle.API/EventRaffle.API.csproj" />
+  <Project Path="EventRaffle.Core/EventRaffle.Core.csproj" />
+  <Project Path="EventRaffle.Infrastracture/EventRaffle.Infrastracture.csproj" />
+  <Project Path="EventRaffle.Service/EventRaffle.Service.csproj" />
+  <Project Path="EventRaffle.Testing/EventRaffle.Testing.csproj" />
+</Solution>
