@@ -20,6 +20,11 @@ namespace EventRaffle.Infrastracture.Persistence.Configurations
 
             builder.Property(u => u.Description).HasMaxLength(500);
 
+            builder.HasMany(e => e.Participants)
+                   .WithOne(p => p.Event)
+                   .HasForeignKey(p => p.EventId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

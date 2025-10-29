@@ -7,5 +7,9 @@
         public DateTime StartDateUtc { get; set; }
         public DateTime EndDateUtc { get; set; }
         public bool IsActive { get; set; }
+
+        #region Navigation Properties
+        public ICollection<Participant> Participants { get; set; } = new List<Participant>();
+        #endregion
     }
 }

@@ -8,8 +8,9 @@ namespace EventRaffle.Service.Mappings
     {
         public EventProfile()
         {
-            // Define your mapping configurations here
-            CreateMap<Event, EventDto>();
+            CreateMap<Event, EventDto>().ReverseMap();
+            CreateMap<Event, CreateEventDto>().ReverseMap();
+            CreateMap<Event, EventNameAndIdDto>();
         }
     }
 }

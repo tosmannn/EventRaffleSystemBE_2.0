@@ -18,6 +18,7 @@ namespace EventRaffle.Service.DependencyInjection
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<EventProfile>();
+                cfg.AddProfile<ParticipantProfile>();
             }, loggerFactory);
 
             IMapper mapper = config.CreateMapper();

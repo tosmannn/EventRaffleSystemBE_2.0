@@ -15,7 +15,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastracture(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddMappingProfiles();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontendApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000") // Replace with your frontend app URL
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -23,6 +32,8 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 });
+
+System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
 var app = builder.Build();
 
@@ -36,6 +47,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowFrontendApp");
 
 app.MapControllers();
 

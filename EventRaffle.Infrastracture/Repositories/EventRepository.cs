@@ -11,9 +11,23 @@ namespace EventRaffle.Infrastracture.Repositories
         {
         }
 
-        public async Task<IEnumerable<Event>> GetActiveRafflesAsync()
+        public async Task<bool> EventNameExistAsync(string name)
         {
             return await _dbSet
+                .AnyAsync(e => EF.Functions.Like(e.Name, name) && !e.IsDeleted);
+        }
+
+        public async Task<Event?> GetActiveEventAsync()
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(e => e.IsActive && !e.IsDeleted)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Event>> GetAllActiveEventsAsync()
+        {
+           return await _dbSet
                 .Where(e => e.IsActive && !e.IsDeleted)
                 .ToListAsync();
         }

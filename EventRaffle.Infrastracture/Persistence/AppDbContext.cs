@@ -10,6 +10,7 @@ namespace EventRaffle.Infrastracture.Persistence
         }
 
         public DbSet<Event> Events { get; set; }
+        public DbSet<Participant> Participants { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

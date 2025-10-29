@@ -8,8 +8,8 @@ namespace EventRaffle.Service.DependencyInjection
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IParticipantService, ParticipantService>();
 
             return services;
         }

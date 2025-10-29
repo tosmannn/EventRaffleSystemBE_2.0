@@ -14,6 +14,7 @@ namespace EventRaffle.Infrastracture.DependencyInjection
 
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IParticipantRepository, ParticipantRepository>();
 
             services.AddDbContext<AppDbContext>(options =>                 
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

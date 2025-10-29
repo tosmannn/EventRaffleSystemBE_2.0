@@ -4,6 +4,9 @@ namespace EventRaffle.Core.Interfaces.Repositories
 {
     public interface IEventRepository : IBaseRepository<Event>
     {
-        Task<IEnumerable<Event>> GetActiveRafflesAsync();
+        Task<Event?> GetActiveEventAsync();
+        Task<bool> EventNameExistAsync(string name);
+        Task<IEnumerable<Event>> GetAllActiveEventsAsync();
     }
+
 }

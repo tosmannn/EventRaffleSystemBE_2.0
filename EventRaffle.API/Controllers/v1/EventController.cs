@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
+using EventRaffle.Core.DTOs.Event;
 using EventRaffle.Core.Interfaces.Services;
+using EventRaffle.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRaffle.API.Controllers.v1
@@ -15,10 +17,62 @@ namespace EventRaffle.API.Controllers.v1
             _eventService = eventService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create()
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromBody] CreateEventDto dto)
         {
-            return View();
+            try
+            {
+                var result = await _eventService.CreateEventAsync(dto);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultModel<EventDto>
+                        .Fail("An unexpected error occurred.", 500, new List<string> { ex.Message }));
+            }
+        }
+
+        [HttpGet("validate-name")]
+        public async Task<IActionResult> ValidateEventName([FromQuery] string name)
+        {
+            try
+            {
+                var result = await _eventService.ValidateEventNameAsync(name);
+
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultModel<EventDto>
+                        .Fail("An unexpected error occurred.", 500, new List<string> { ex.Message }));
+            }
+        }
+
+        [HttpGet("active-event")]
+        public async Task<IActionResult> GetActiveEventId()
+        {
+            try
+            {
+                var result = await _eventService.GetActiveEventNameAndIdAsync();
+
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultModel<EventDto>
+                        .Fail("An unexpected error occurred.", 500, new List<string> { ex.Message }));
+            }
         }
     }
 }
