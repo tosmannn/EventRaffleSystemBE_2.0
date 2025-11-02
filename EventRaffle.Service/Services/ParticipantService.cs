@@ -3,6 +3,7 @@ using EventRaffle.Core.DTOs.Participant;
 using EventRaffle.Core.Entities;
 using EventRaffle.Core.Interfaces.Repositories;
 using EventRaffle.Core.Interfaces.Services;
+using EventRaffle.Core.Interfaces.Time;
 using EventRaffle.Core.Models;
 using ExcelDataReader;
 using Microsoft.Extensions.Logging;
@@ -15,17 +16,24 @@ namespace EventRaffle.Service.Services
         private readonly IMapper _mapper;
 
         private readonly IParticipantRepository _participantRepository;
+        private readonly IRaffleRepository _raffleRepository;
+        private readonly IClock _clock;
+
 
         private const string LogPrefix = "[ParticipantService]";
         private string Prefix(string methodName) => $"{LogPrefix} [{methodName}]";
 
         public ParticipantService(ILogger<ParticipantService> logger
             , IMapper mapper
-            , IParticipantRepository participantRepository)
+            , IParticipantRepository participantRepository
+            , IRaffleRepository raffleRepository
+            , IClock clock)
         {
             _logger = logger;
             _mapper = mapper;
             _participantRepository = participantRepository;
+            _raffleRepository = raffleRepository;
+            _clock = clock;
         }
 
         public async Task<ResultModel<int>> UploadParticipantsAsync(Stream file, Guid eventId)
@@ -88,6 +96,58 @@ namespace EventRaffle.Service.Services
             finally
             {
                 _logger.LogInformation("{Prefix} Finished getting participants for EventId: {EventId}", Prefix(methodName), eventId);
+            }
+        }
+
+
+
+        public async Task<ResultModel<bool>> RegisterAsync(Guid id)
+        {
+            var methodName = nameof(RegisterAsync);
+
+            _logger.LogInformation("{Prefix} Registering participant with Id: {Id}", Prefix(methodName), id);
+
+
+            try
+            {
+                var participant = await _participantRepository.GetByIdAsync(id);
+
+                if (participant == null)
+                {
+                    return ResultModel<bool>.Fail("Participant not found.", 404);
+                }
+
+                if (participant.IsRegistered)
+                {
+                    return ResultModel<bool>.Fail("Participant is already registered for a raffle.", 409);
+                }
+
+                participant.IsRegistered = true;
+                participant.RegisteredAt = _clock.UtcNow;
+                participant.ModifiedUtcDate = _clock.UtcNow;
+
+                var raffle = new Raffle
+                {
+                    IsSelected = false,
+                    ParticipantId = participant.Id,
+                    EventId = participant.EventId,
+                };
+
+                await _raffleRepository.AddAsync(raffle);
+                await _participantRepository.SaveChangesAsync();
+
+                return ResultModel<bool>.Ok(true, "Successfully registered participant");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Prefix} Error registering participant id: {participantId}", Prefix(methodName), id);
+
+                return ResultModel<bool>.Fail("An error occurred while registering participant.", 500, new List<string> { ex.Message });
+            }
+            finally
+            {
+                _logger.LogInformation("{Prefix} Finished registering participants Id: {participantId}", Prefix(methodName), id);
             }
         }
 

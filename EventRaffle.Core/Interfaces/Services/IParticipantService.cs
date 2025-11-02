@@ -7,5 +7,6 @@ namespace EventRaffle.Core.Interfaces.Services
     {
         public Task<ResultModel<int>> UploadParticipantsAsync(Stream file, Guid eventId);
         public Task<ResultModel<IEnumerable<ParticipantDto>>> GetAllAsync(Guid eventId);
+        public Task<ResultModel<bool>> RegisterAsync(Guid id);
     }
 }

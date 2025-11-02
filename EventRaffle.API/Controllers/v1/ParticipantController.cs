@@ -53,5 +53,23 @@ namespace EventRaffle.API.Controllers.v1
                 return StatusCode(500, "An unexpected error occurred: " + ex.Message);
             }
         }
+
+        [HttpPost("{id}/register")]
+        public async Task<IActionResult> RegisterAsync(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    return BadRequest("Invalid participantId");
+
+                var result = await _participantService.RegisterAsync(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred: " + ex.Message);
+            }
+        }
     }
 }

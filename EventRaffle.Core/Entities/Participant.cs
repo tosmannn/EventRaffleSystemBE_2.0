@@ -12,6 +12,7 @@
 
         #region Navigation Properties
         public Event Event { get; set; }
+        public Raffle Raffle { get; set; }
         #endregion
 
     }

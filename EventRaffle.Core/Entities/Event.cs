@@ -10,6 +10,7 @@
 
         #region Navigation Properties
         public ICollection<Participant> Participants { get; set; } = new List<Participant>();
+        public ICollection<Raffle> Raffles { get; set; } = new List<Raffle>();
         #endregion
     }
 }
