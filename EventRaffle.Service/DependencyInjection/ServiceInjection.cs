@@ -13,6 +13,7 @@ namespace EventRaffle.Service.DependencyInjection
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IParticipantService, ParticipantService>();
             services.AddScoped<IRaffleService, RaffleService>();
+            services.AddScoped<IDashbaordService, DashbaordService>();
 
             services.AddSingleton<IClock, SystemClock>();
 

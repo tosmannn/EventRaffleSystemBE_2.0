@@ -17,5 +17,19 @@ namespace EventRaffle.Infrastracture.Repositories
                 .Where(p => p.EventId == eventId)
                 .ToListAsync();
         }
+
+        public async Task<int> GetRegisteredParticipantsCountAsync(Guid eventId)
+        {
+            return await _dbSet
+                .Where(p => p.EventId == eventId && p.IsRegistered)
+                .CountAsync();
+        }
+
+        public async Task<int> GetTotalParticipantsCountAsync(Guid eventId)
+        {
+            return await _dbSet
+                .Where(p => p.EventId == eventId)
+                .CountAsync();
+        }
     }
 }
